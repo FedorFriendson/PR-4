@@ -7,10 +7,11 @@ class Program
 {
     static void Main(string[] args)
     {
+        int index = 0;
         int[] nums = new int[1000000];
         for (int i = 0; i < nums.Length; i++)
         {
-            nums[i] = i + 1; // Заполняет от 1 до 1000
+            nums[i] = i + 1;
         }
         
         Console.Write("Какую переменную вы ищете: ");
@@ -20,85 +21,50 @@ class Program
         Console.Write("Выбор: ");
         int num2 = int.Parse(Console.ReadLine());
         var timer = Stopwatch.StartNew();
+        Console.Clear();
         if (num2 == 1)
         {
-            line_seach(nums, num);
+            
+            index = line_seach(nums, num);
             
         }
         if (num2 == 2)
         {
-            binarySeach(nums, num);
+            
+            index =   binarySeach(nums, num);
         }
         else if(num2!=1 && num2 != 2)
         {
             Console.WriteLine("Ошибка");
         }
         timer.Stop();
+        if (num2 == 1 || num2 == 2)
+        {
+            Console.WriteLine($"Индекс требуемой переменной: {index}");
+        }
         Console.WriteLine($"Время анализа: {timer.ElapsedMilliseconds} мс");
     }
 
-    static void line_seach(int[] nums, int num)
+    static int line_seach(int[] nums, int num)
     {
-        bool found = false;
-
         for (int i = 0; i < nums.Length; i++)
-        {
-            Console.WriteLine($"сравнение  №{i}");
-            if (nums[i] == num)
-            {
-                found = true;
-                int index = Array.IndexOf(nums, num);
-                Console.WriteLine($"Линейный поиск: найдено на позиции {index}");
-                Console.WriteLine($"Сравнений: {i+1}");
-               
-            }
-        }
-
-        if (!found)
-        {
-            Console.WriteLine($"Линейный поиск: значение {num} не найдено.");
-        }
+            if (nums[i] == num) return i;   // нашли — вернуть индекс
+        return -1; 
     }
 
-    static void binarySeach(int[] nums, int num)
+    static int binarySeach(int[] nums, int num)
     {
-        bool found = false;
-        int low = 0;
-        int high = nums.Length - 1;
-        int comparisons = 0;
-
+        int move = 0;
+        int low = 0, high = nums.Length - 1;
         while (low <= high)
         {
-            
-            comparisons++;
-            Console.WriteLine($"сравнение  №{comparisons}");
+            move++;
+            Console.WriteLine($"Операций: {move}");
             int mid = (low + high) / 2;
-
-            if (nums[mid] == num)
-            {
-                found = true;
-                Console.WriteLine($"Бинарный поиск: найдено на позиции {mid}");
-                Console.WriteLine($"Сравнений: {comparisons}");
-                Console.WriteLine($"Время анализа: ");
-                Console.WriteLine("Нажмите, чтобы продолжить");
-                Console.ReadKey();
-                break;
-            }
-
-            if (nums[mid] < num)
-            {
-                low = mid + 1; // Сдвигаем левую границу вправо
-            }
-            else
-            {
-                high = mid - 1; // Сдвигаем правую границу влево
-            }
+            if (nums[mid] == num) return mid;       // нашли
+            if (nums[mid] < num) low = mid + 1;     // искомое правее
+            else high = mid - 1;                 // искомое левее
         }
-
-        if (!found)
-        {
-            Console.WriteLine($"Бинарный поиск: значение {num} не найдено.");
-            Console.WriteLine($"Сравнений: {comparisons}");
-        }
+        return -1;   
     }
 }
